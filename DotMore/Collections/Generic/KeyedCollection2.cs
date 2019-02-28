@@ -11,18 +11,16 @@ namespace DotMore.Collections.Generic
 	public class KeyedCollection2<TKey, TItem> : KeyedCollection<TKey, TItem>
 	{
 		private const string DelegateNullExceptionMessage = "Delegate passed cannot be null";
-		private Func<TItem, TKey> _getKeyForItemFunction;
+		private readonly Func<TItem, TKey> _getKeyForItemFunction;
 
 		public KeyedCollection2(Func<TItem, TKey> getKeyForItemFunction) : base()
 		{
-			if (getKeyForItemFunction == null) throw new ArgumentNullException(DelegateNullExceptionMessage);
-			_getKeyForItemFunction = getKeyForItemFunction;
+			_getKeyForItemFunction = getKeyForItemFunction ?? throw new ArgumentNullException(DelegateNullExceptionMessage);
 		}
 
 		public KeyedCollection2(Func<TItem, TKey> getKeyForItemDelegate, IEqualityComparer<TKey> comparer) : base(comparer)
 		{
-			if (getKeyForItemDelegate == null) throw new ArgumentNullException(DelegateNullExceptionMessage);
-			_getKeyForItemFunction = getKeyForItemDelegate;
+			_getKeyForItemFunction = getKeyForItemDelegate ?? throw new ArgumentNullException(DelegateNullExceptionMessage);
 		}
 
 		protected override TKey GetKeyForItem(TItem item)
@@ -62,8 +60,7 @@ namespace DotMore.Collections.Generic
 
 		public void Sort(IComparer<TItem> comparer)
 		{
-			List<TItem> list = base.Items as List<TItem>;
-			if (list != null)
+			if (base.Items is List<TItem> list)
 			{
 				list.Sort(comparer);
 			}
